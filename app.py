@@ -4,7 +4,7 @@ import time
 # Page Config
 st.set_page_config(
     page_title="Enterprise AI Resolution Agent",
-    page_icon="🛡️",
+    page_icon="🛡️️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -83,7 +83,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Initialize Session States for History tracking
+# Initialize Session States
 if "dashboard_chat" not in st.session_state:
     st.session_state.dashboard_chat = [
         {"role": "assistant", "content": "Hello! Main aapka Enterprise AI Resolution Agent hoon. Aap yahan mic se voice record karke ya chat karke query bhej sakte hain[cite: 3]."}
@@ -91,6 +91,9 @@ if "dashboard_chat" not in st.session_state:
 
 if "search_history" not in st.session_state:
     st.session_state.search_history = []
+
+if 'pipeline_run' not in st.session_state:
+    st.session_state.pipeline_run = False
 
 # Sidebar Navigation
 with st.sidebar:
@@ -126,7 +129,7 @@ if tab_selection == "🚀 Live Agent Dashboard":
     st.markdown("""
     <div class='top-banner'>
         <h2 style='margin: 0; color: #ffffff; font-size: 1.6rem;'>🧠 Enterprise AI Customer Escalation & Resolution Agent</h2>
-        <p style='margin: 8px 0 0 0; color: #bfdbfe; font-size: 0.95rem;'>Multi-Modal Triage: Supporting Record & Send Voice Command Console[cite: 3].</p>
+        <p style='margin: 8px 0 0 0; color: #bfdbfe; font-size: 0.95rem;'>Multi-Modal Triage: Supporting Record & Send Voice Command Console & Live Data Persistence Registry.</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -147,16 +150,12 @@ if tab_selection == "🚀 Live Agent Dashboard":
 
     with col_output:
         st.markdown("### 📊 Agentic Workflow & Diagnostics")
-        
-        if 'pipeline_run' not in st.session_state:
-            st.session_state.pipeline_run = False
 
         if analyze_btn:
             st.session_state.pipeline_run = True
-            # Log to history
             st.session_state.search_history.append({
                 "type": "Pipeline Analysis",
-                "query": f"Customer: {customer_name} | Order: {order_id} | Issue: {complaint_text[:50]}...",
+                "query": f"Customer: {customer_name} | Order: {order_id} | Issue: {complaint_text[:40]}...",
                 "status": "Self-Resolved (Clause 4.2)"
             })
 
@@ -206,7 +205,7 @@ Root Cause: Regional transit hub bottleneck (Hub ID: NAG-09)
 Policy Clause Matched: Clause 4.2 (Full Refund Authorized)
 Resolution Status: Self-Resolved by AI (Instant Refund Dispatched)
 Confidence Score: 98.4%
-============================================="""
+=============================================""""
 
             st.markdown(f"""
             <div style='background: white; border: 1px solid #cbd5e1; padding: 15px; border-radius: 10px; margin-top: 10px;'>
@@ -224,9 +223,13 @@ Confidence Score: 98.4%
                 mime="text/plain"
             )
 
-    # Live Data Storage Registry
+    # -------------------------------------------------------------
+    # LIVE DATA STORAGE & PERSISTENCE REGISTRY SECTION
+    # -------------------------------------------------------------
     st.markdown("---")
     st.markdown("### 🗄️ Live Data Storage & Persistence Registry")
+    st.markdown("Yeh section real-time mein track karta hai ki multi-agent system ka data kahan securely store ho raha hai:")
+
     col_d1, col_d2, col_d3 = st.columns(3)
     with col_d1:
         st.metric(label="1. Runtime Session Cache", value="Active RAM", delta="Streamlit SessionState")
@@ -235,7 +238,16 @@ Confidence Score: 98.4%
     with col_d3:
         st.metric(label="3. Vector Knowledge Store", value="ChromaDB / FAISS", delta="48,290 SLA Embeddings")
 
-    # Record & Send Voice Console
+    with st.expander("🔍 View Live Database Schema & Payload Destination"):
+        st.markdown("""
+        - **Session State Storage:** Manages active chat logs, user input history, and voice transcription buffers dynamically in memory.
+        - **Transactional CRM Sink:** Automatically writes customer profile (`Shreyash Rangari`), tier (`Platinum VIP`), and order status (`ORD-98421`) into mock PostgreSQL tables.
+        - **Vector Embeddings Index:** Stores enterprise policy documents and refund clauses for semantic search via Vector RAG.
+        """)
+
+    # -------------------------------------------------------------
+    # INTERACTIVE VOICE & CHAT CONSOLE
+    # -------------------------------------------------------------
     st.markdown("""
     <div class='chat-console'>
         <h2 style='color: #1e3a8a; margin-top: 0; font-size: 1.5rem;'>💬 Interactive AI Agent & Record & Send Voice Console</h2>
