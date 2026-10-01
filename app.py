@@ -4,12 +4,12 @@ import time
 # Page Config
 st.set_page_config(
     page_title="Enterprise AI Resolution Agent",
-    page_icon="🛡️️",
+    page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Professional CSS Styling
+# Professional CSS Styling & Enterprise Branding
 st.markdown("""
 <style>
     .stApp {
@@ -23,13 +23,6 @@ st.markdown("""
     }
     [data-testid="stSidebar"] h3, [data-testid="stSidebar"] span, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label, [data-testid="stSidebar"] div {
         color: #ffffff !important;
-    }
-    [data-testid="stSidebar"] .element-container {
-        margin-bottom: -0.4rem !important;
-    }
-    [data-testid="stSidebar"] hr {
-        margin: 8px 0 !important;
-        border-color: rgba(255, 255, 255, 0.2);
     }
     .agent-status-box {
         background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
@@ -48,6 +41,25 @@ st.markdown("""
         margin-bottom: 25px;
         box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
     }
+    .badge-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+    .status-badge {
+        background: #eff6ff;
+        border: 1px solid #3b82f6;
+        color: #1e40af;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 2px 5px rgba(59, 130, 246, 0.1);
+    }
     .step-row {
         background: #ffffff;
         border: 1px solid #e2e8f0;
@@ -57,7 +69,6 @@ st.markdown("""
         display: flex;
         align-items: center;
         justify-content: space-between;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
     }
     .chat-console {
         background: #ffffff;
@@ -75,10 +86,6 @@ st.markdown("""
         border: none;
         padding: 0.75rem 1rem;
         border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-    }
-    .stButton>button:hover {
-        background: linear-gradient(135deg, #1d4ed8 100%, #1e40af 100%);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -86,7 +93,7 @@ st.markdown("""
 # Initialize Session States
 if "dashboard_chat" not in st.session_state:
     st.session_state.dashboard_chat = [
-        {"role": "assistant", "content": "Hello! Main aapka Enterprise AI Resolution Agent hoon. Aap yahan mic se voice record karke ya chat karke query bhej sakte hain[cite: 3]."}
+        {"role": "assistant", "content": "Hello! Main aapka Enterprise AI Resolution Agent hoon. Aap yahan mic se voice record karke ya chat karke query bhej sakte hain."}
     ]
 
 if "search_history" not in st.session_state:
@@ -108,7 +115,7 @@ with st.sidebar:
     ], label_visibility="collapsed")
     st.markdown("---")
     st.markdown("### 🔒 Security Status")
-    st.markdown("<small>• 🛡️ <b>API Authentication:</b> Secured (Env)</small>", unsafe_allow_html=True)
+    st.markdown("<small>• 🛡️ <b>API Authentication:</b> Secured</small>", unsafe_allow_html=True)
     st.markdown("<small>• ⚡ <b>Encryption:</b> AES-256 Active</small>", unsafe_allow_html=True)
     st.markdown("---")
     st.markdown("### 🤖 Active Agent Registry")
@@ -133,20 +140,29 @@ if tab_selection == "🚀 Live Agent Dashboard":
     </div>
     """, unsafe_allow_html=True)
 
+    # Glowing Status Badges (Tip 2)
+    st.markdown("""
+    <div class='badge-container'>
+        <div class='status-badge'>🟢 Multi-Agent Pipeline: Active</div>
+        <div class='status-badge'>⚡ Latency: 940ms</div>
+        <div class='status-badge'>🔒 HIPAA / GDPR Compliant</div>
+        <div class='status-badge'>🛡 AES-256 Encryption</div>
+    </div>
+    """, unsafe_allow_html=True)
+
     col_input, col_output = st.columns([1, 1], gap="large")
 
     with col_input:
         st.markdown("### 📥 Customer Input Panel")
-        with st.container():
-            customer_name = st.text_input("Customer Name", value="Shreyash Rangari")
-            order_id = st.text_input("Order / Transaction ID", value="ORD-98421")
-            customer_tier = st.selectbox("Customer Loyalty Tier", ["Platinum Tier (VIP)", "Gold Tier", "Standard Tier"])
-            complaint_text = st.text_area(
-                "Chat Transcript / Complaint Message",
-                value="Mera order 5 din pehle deliver hona chahiye tha, par abhi tak nahi aaya. Mujhe mera full refund chahiye jaldi se!",
-                height=120
-            )
-            analyze_btn = st.button("🚀 Run Autonomous Agent Pipeline")
+        customer_name = st.text_input("Customer Name", value="Shreyash Rangari")
+        order_id = st.text_input("Order / Transaction ID", value="ORD-98421")
+        customer_tier = st.selectbox("Customer Loyalty Tier", ["Platinum Tier (VIP)", "Gold Tier", "Standard Tier"])
+        complaint_text = st.text_area(
+            "Chat Transcript / Complaint Message",
+            value="Mera order 5 din pehle deliver hona chahiye tha, par abhi tak nahi aaya. Mujhe mera full refund chahiye jaldi se!",
+            height=120
+        )
+        analyze_btn = st.button("🚀 Run Autonomous Agent Pipeline")
 
     with col_output:
         st.markdown("### 📊 Agentic Workflow & Diagnostics")
@@ -155,7 +171,7 @@ if tab_selection == "🚀 Live Agent Dashboard":
             st.session_state.pipeline_run = True
             st.session_state.search_history.append({
                 "type": "Pipeline Analysis",
-                "query": f"Customer: {customer_name} | Order: {order_id} | Issue: {complaint_text[:40]}...",
+                "query": f"Customer: {customer_name} | Order: {order_id} | Issue: {complaint_text[:30]}...",
                 "status": "Self-Resolved (Clause 4.2)"
             })
 
@@ -175,28 +191,29 @@ if tab_selection == "🚀 Live Agent Dashboard":
             s5 = st.empty()
             
             s1.markdown("<div class='step-row' style='border-left: 4px solid #2563eb;'><span>🔵 &nbsp; <b>Intent & Sentiment Triage</b></span><span style='color: #854d0e; font-size: 0.75rem;'>Processing...</span></div>", unsafe_allow_html=True)
-            time.sleep(0.3)
+            time.sleep(0.2)
             s1.markdown("<div class='step-row' style='border-left: 4px solid #16a34a;'><span>🔵 &nbsp; <b>Intent & Sentiment Triage</b></span><span style='color: #166534; font-size: 0.75rem;'>Completed</span></div>", unsafe_allow_html=True)
             
             s2.markdown("<div class='step-row' style='border-left: 4px solid #2563eb;'><span>🟢 &nbsp; <b>CRM History & Tier Check</b></span><span style='color: #854d0e; font-size: 0.75rem;'>Processing...</span></div>", unsafe_allow_html=True)
-            time.sleep(0.3)
+            time.sleep(0.2)
             s2.markdown("<div class='step-row' style='border-left: 4px solid #16a34a;'><span>🟢 &nbsp; <b>CRM History & Tier Check</b></span><span style='color: #166534; font-size: 0.75rem;'>Completed</span></div>", unsafe_allow_html=True)
             
             s3.markdown("<div class='step-row' style='border-left: 4px solid #2563eb;'><span>🟣 &nbsp; <b>SLA & Policy Vector RAG</b></span><span style='color: #854d0e; font-size: 0.75rem;'>Processing...</span></div>", unsafe_allow_html=True)
-            time.sleep(0.3)
+            time.sleep(0.2)
             s3.markdown("<div class='step-row' style='border-left: 4px solid #16a34a;'><span>🟣 &nbsp; <b>SLA & Policy Vector RAG</b></span><span style='color: #166534; font-size: 0.75rem;'>Completed</span></div>", unsafe_allow_html=True)
             
             s4.markdown("<div class='step-row' style='border-left: 4px solid #2563eb;'><span>🟠 &nbsp; <b>Root Cause Diagnostics</b></span><span style='color: #854d0e; font-size: 0.75rem;'>Processing...</span></div>", unsafe_allow_html=True)
-            time.sleep(0.3)
+            time.sleep(0.2)
             s4.markdown("<div class='step-row' style='border-left: 4px solid #16a34a;'><span>🟠 &nbsp; <b>Root Cause Diagnostics</b></span><span style='color: #166534; font-size: 0.75rem;'>Completed</span></div>", unsafe_allow_html=True)
             
             s5.markdown("<div class='step-row' style='border-left: 4px solid #2563eb;'><span>🩵 &nbsp; <b>Autonomous Resolution Engine</b></span><span style='color: #854d0e; font-size: 0.75rem;'>Processing...</span></div>", unsafe_allow_html=True)
-            time.sleep(0.3)
+            time.sleep(0.2)
             s5.markdown("<div class='step-row' style='border-left: 4px solid #16a34a;'><span>🩵 &nbsp; <b>Autonomous Resolution Engine</b></span><span style='color: #166534; font-size: 0.75rem;'>Completed</span></div>", unsafe_allow_html=True)
             
             st.success("✨ Autonomous Pipeline Executed Successfully!")
             
             report_text = f"""=== ENTERPRISE AI RESOLUTION AUDIT REPORT ===
+Company: Enterprise AI Systems Inc.
 Customer Name: {customer_name}
 Customer Tier: {customer_tier}
 Order ID: {order_id}
@@ -205,7 +222,9 @@ Root Cause: Regional transit hub bottleneck (Hub ID: NAG-09)
 Policy Clause Matched: Clause 4.2 (Full Refund Authorized)
 Resolution Status: Self-Resolved by AI (Instant Refund Dispatched)
 Confidence Score: 98.4%
-=============================================""""
+Timestamp: 2026-10-01 15:50:00 IST
+Cryptographic Hash ID: #SEC-98421-XYZ-2026
+============================================="""
 
             st.markdown(f"""
             <div style='background: white; border: 1px solid #cbd5e1; padding: 15px; border-radius: 10px; margin-top: 10px;'>
@@ -223,35 +242,29 @@ Confidence Score: 98.4%
                 mime="text/plain"
             )
 
-    # -------------------------------------------------------------
-    # LIVE DATA STORAGE & PERSISTENCE REGISTRY SECTION
-    # -------------------------------------------------------------
+    # Live Data Storage Registry
     st.markdown("---")
     st.markdown("### 🗄️ Live Data Storage & Persistence Registry")
-    st.markdown("Yeh section real-time mein track karta hai ki multi-agent system ka data kahan securely store ho raha hai:")
-
     col_d1, col_d2, col_d3 = st.columns(3)
     with col_d1:
-        st.metric(label="1. Runtime Session Cache", value="Active RAM", delta="Streamlit SessionState")
+        st.metric(label="1. Runtime Session Cache", value="Active RAM", delta="SessionState")
     with col_d2:
-        st.metric(label="2. CRM Relational DB", value="PostgreSQL", delta="Table: enterprise_tickets_log")
+        st.metric(label="2. CRM Relational DB", value="PostgreSQL", delta="Table: tickets_log")
     with col_d3:
-        st.metric(label="3. Vector Knowledge Store", value="ChromaDB / FAISS", delta="48,290 SLA Embeddings")
+        st.metric(label="3. Vector Knowledge Store", value="ChromaDB / FAISS", delta="48,290 Embeddings")
 
     with st.expander("🔍 View Live Database Schema & Payload Destination"):
         st.markdown("""
         - **Session State Storage:** Manages active chat logs, user input history, and voice transcription buffers dynamically in memory.
-        - **Transactional CRM Sink:** Automatically writes customer profile (`Shreyash Rangari`), tier (`Platinum VIP`), and order status (`ORD-98421`) into mock PostgreSQL tables.
+        - **Transactional CRM Sink:** Automatically writes customer profile, tier, and order status into mock PostgreSQL tables.
         - **Vector Embeddings Index:** Stores enterprise policy documents and refund clauses for semantic search via Vector RAG.
         """)
 
-    # -------------------------------------------------------------
-    # INTERACTIVE VOICE & CHAT CONSOLE
-    # -------------------------------------------------------------
+    # Interactive Voice & Chat Console
     st.markdown("""
     <div class='chat-console'>
         <h2 style='color: #1e3a8a; margin-top: 0; font-size: 1.5rem;'>💬 Interactive AI Agent & Record & Send Voice Console</h2>
-        <p style='color: #64748b; font-size: 0.95rem;'>Pehle microphone par apni voice record karein, phir <b>'📤 Send Voice Command'</b> button dabakar agent ka lamba response dekhein[cite: 3].</p>
+        <p style='color: #64748b; font-size: 0.95rem;'>Pehle microphone par apni voice record karein, phir <b>'📤 Send Voice Command'</b> button dabakar agent ka lamba response dekhein.</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -288,14 +301,14 @@ Confidence Score: 98.4%
 
         with st.chat_message("assistant"):
             with st.spinner("AI Multi-Agent processing deep analysis..."):
-                time.sleep(0.8)
+                time.sleep(0.5)
                 agent_reply = f"""### 🛡️ Enterprise Multi-Agent Deep Investigation & Resolution Report
 - **📥 Received User Input / Query:** `{user_query}`
 - **🔵 Intent & Sentiment Triage Agent:** Classified grievance category as *Critical Escalation / Service Failure*. Sentiment score evaluated at `-0.85` (High Frustration).
-- **🟢 CRM Database Sync Agent:** Customer identity verified. Account status: **Active Platinum VIP Member** with 14 prior successful transactions and zero historical chargebacks.
+- **🟢 CRM Database Sync Agent:** Customer identity verified. Account status: **Active Platinum VIP Member** with 14 prior successful transactions.
 - **🟣 Vector RAG Policy Engine:** Queried embedded knowledge base containing 48,290 enterprise policy documents. Successfully matched **Clause 4.2 (Logistics Delay & Refund Guarantee)**.
-- **🟠 Root Cause Diagnostics Node:** Traced supply chain bottleneck to regional transit hub fulfillment failure (Hub ID: NAG-09). Automated webhook alert sent to logistics partners.
-- **🩵 Autonomous Resolution Engine:** Bypassed standard manual approval queues. Executed automated full refund override and queued a goodwill courtesy voucher.
+- **🟠 Root Cause Diagnostics Node:** Traced supply chain bottleneck to regional transit hub fulfillment failure (Hub ID: NAG-09).
+- **🩵 Autonomous Resolution Engine:** Executed automated full refund override and queued a goodwill courtesy voucher.
 - **⚡ Final Execution Status:** **Self-Resolved by AI Multi-Agent Framework** in `1,180 ms` with a **98.4% Confidence Score**."""
                 st.markdown(agent_reply)
                 st.session_state.dashboard_chat.append({"role": "assistant", "content": agent_reply})
@@ -320,11 +333,11 @@ elif tab_selection == "📜 Search & Chat History Log":
 
 else:
     st.markdown("## 📊 Enterprise Agent Performance & Analytics")
-    st.markdown("Real-time telemetry and metrics for multi-channel customer interactions[cite: 3].")
+    st.markdown("Real-time telemetry and metrics for multi-channel customer interactions.")
     st.markdown("---")
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric(label="Total Interactions", value=str(1428 + len(st.session_state.search_history)), delta="+14%")
+        st.metric(label="Total Interactions", value=str(1428 + len(st.session_state.search_history)), delta="+14% this week")
     with col2:
         st.metric(label="Voice vs Chat Ratio", value="42% / 58%", delta="Balanced")
     with col3:
