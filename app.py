@@ -83,6 +83,15 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# Initialize Session States for History tracking
+if "dashboard_chat" not in st.session_state:
+    st.session_state.dashboard_chat = [
+        {"role": "assistant", "content": "Hello! Main aapka Enterprise AI Resolution Agent hoon. Aap yahan mic se voice record karke ya chat karke query bhej sakte hain[cite: 3]."}
+    ]
+
+if "search_history" not in st.session_state:
+    st.session_state.search_history = []
+
 # Sidebar Navigation
 with st.sidebar:
     st.markdown("### 🛡️ Enterprise Core v2.4")
@@ -91,6 +100,7 @@ with st.sidebar:
     st.markdown("### 📌 Navigation")
     tab_selection = st.radio("Go to:", [
         "🚀 Live Agent Dashboard", 
+        "📜 Search & Chat History Log",
         "📊 Analytics & Metrics"
     ], label_visibility="collapsed")
     st.markdown("---")
@@ -116,7 +126,7 @@ if tab_selection == "🚀 Live Agent Dashboard":
     st.markdown("""
     <div class='top-banner'>
         <h2 style='margin: 0; color: #ffffff; font-size: 1.6rem;'>🧠 Enterprise AI Customer Escalation & Resolution Agent</h2>
-        <p style='margin: 8px 0 0 0; color: #bfdbfe; font-size: 0.95rem;'>Multi-Modal Triage: Supporting Record & Send Voice Command Console.</p>
+        <p style='margin: 8px 0 0 0; color: #bfdbfe; font-size: 0.95rem;'>Multi-Modal Triage: Supporting Record & Send Voice Command Console[cite: 3].</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -143,6 +153,12 @@ if tab_selection == "🚀 Live Agent Dashboard":
 
         if analyze_btn:
             st.session_state.pipeline_run = True
+            # Log to history
+            st.session_state.search_history.append({
+                "type": "Pipeline Analysis",
+                "query": f"Customer: {customer_name} | Order: {order_id} | Issue: {complaint_text[:50]}...",
+                "status": "Self-Resolved (Clause 4.2)"
+            })
 
         if not st.session_state.pipeline_run:
             st.markdown("""
@@ -208,13 +224,9 @@ Confidence Score: 98.4%
                 mime="text/plain"
             )
 
-    # -------------------------------------------------------------
-    # LIVE DATA STORAGE & PERSISTENCE REGISTRY SECTION (NEW FOR JUDGES)
-    # -------------------------------------------------------------
+    # Live Data Storage Registry
     st.markdown("---")
     st.markdown("### 🗄️ Live Data Storage & Persistence Registry")
-    st.markdown("Yeh section real-time mein track karta hai ki multi-agent system ka data kahan securely store ho raha hai:")
-
     col_d1, col_d2, col_d3 = st.columns(3)
     with col_d1:
         st.metric(label="1. Runtime Session Cache", value="Active RAM", delta="Streamlit SessionState")
@@ -223,16 +235,7 @@ Confidence Score: 98.4%
     with col_d3:
         st.metric(label="3. Vector Knowledge Store", value="ChromaDB / FAISS", delta="48,290 SLA Embeddings")
 
-    with st.expander("🔍 View Live Database Schema & Payload Destination"):
-        st.markdown("""
-        - **Session State Storage:** Manages active chat logs, user input history, and voice transcription buffers dynamically in memory.
-        - **Transactional CRM Sink:** Automatically writes customer profile (`Shreyash Rangari`), tier (`Platinum VIP`), and order status (`ORD-98421`) into mock PostgreSQL tables.
-        - **Vector Embeddings Index:** Stores enterprise policy documents and refund clauses for semantic search via Vector RAG.
-        """)
-
-    # -------------------------------------------------------------
-    # LOWER PART: RECORD & SEND VOICE CONSOLE (WITH DEDICATED SEND BUTTON)
-    # -------------------------------------------------------------
+    # Record & Send Voice Console
     st.markdown("""
     <div class='chat-console'>
         <h2 style='color: #1e3a8a; margin-top: 0; font-size: 1.5rem;'>💬 Interactive AI Agent & Record & Send Voice Console</h2>
@@ -240,17 +243,13 @@ Confidence Score: 98.4%
     </div>
     """, unsafe_allow_html=True)
 
-    if "dashboard_chat" not in st.session_state:
-        st.session_state.dashboard_chat = [
-            {"role": "assistant", "content": "Hello! Main aapka Enterprise AI Resolution Agent hoon. Aap yahan mic se voice record karke send button daba sakte hain[cite: 3]."}
-        ]
-
     recorded_audio = st.audio_input("🎤 Record your voice message:")
 
     if recorded_audio is not None:
         if st.button("📤 Send Recorded Voice Command to Agent"):
             simulated_voice_text = "Mera order cancel karo aur turant refund bhejo!"
             st.session_state.dashboard_chat.append({"role": "user", "content": f"🎤 [Voice Command Sent]: {simulated_voice_text}"})
+            st.session_state.search_history.append({"type": "Voice Command", "query": simulated_voice_text, "status": "Self-Resolved via Voice"})
             
             agent_reply = f"""### 🛡️ Enterprise Multi-Agent Deep Investigation & Resolution Report (Voice Channel)
 - **🎙️ Received Voice Stream Audio:** Processed via Whisper-Enterprise STT Engine (`99.4% Confidence`).
@@ -270,6 +269,8 @@ Confidence Score: 98.4%
 
     if user_query := st.chat_input("Type your message or query to the AI Agent here..."):
         st.session_state.dashboard_chat.append({"role": "user", "content": user_query})
+        st.session_state.search_history.append({"type": "Chat Query", "query": user_query, "status": "Resolved by RAG"})
+        
         with st.chat_message("user"):
             st.markdown(user_query)
 
@@ -288,13 +289,30 @@ Confidence Score: 98.4%
                 st.session_state.dashboard_chat.append({"role": "assistant", "content": agent_reply})
         st.rerun()
 
+elif tab_selection == "📜 Search & Chat History Log":
+    st.markdown("## 📜 Live Search & Interaction History Log")
+    st.markdown("Yeh log track karta hai ki session ke dauran kaun-kaun si queries, voice commands, ya pipeline runs execute hue hain.")
+    st.markdown("---")
+    
+    if not st.session_state.search_history:
+        st.info("Abhi tak koi search query ya voice command execute nahi hui hai. Dashboard par jaakar run karein!")
+    else:
+        for idx, item in enumerate(st.session_state.search_history, 1):
+            st.markdown(f"""
+            <div style='background: white; border: 1px solid #cbd5e1; padding: 15px; border-radius: 10px; margin-bottom: 12px;'>
+                <h4 style='color: #1e3a8a; margin-top: 0;'>#{idx} - Interaction Type: {item['type']}</h4>
+                <p style='margin: 4px 0;'><b>Query / Input:</b> <code>{item['query']}</code></p>
+                <p style='margin: 4px 0; color: #16a34a;'><b>Resolution Status:</b> {item['status']}</p>
+            </div>
+            """, unsafe_allow_html=True)
+
 else:
     st.markdown("## 📊 Enterprise Agent Performance & Analytics")
     st.markdown("Real-time telemetry and metrics for multi-channel customer interactions[cite: 3].")
     st.markdown("---")
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric(label="Total Interactions", value="1,428", delta="+14%")
+        st.metric(label="Total Interactions", value=str(1428 + len(st.session_state.search_history)), delta="+14%")
     with col2:
         st.metric(label="Voice vs Chat Ratio", value="42% / 58%", delta="Balanced")
     with col3:
